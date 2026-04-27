@@ -1,0 +1,55 @@
+output_dir: /data/ynzhang/PixelResShift4/smoke_b16_ddp
+checkpoint_dir: /data/ynzhang/PixelResShift4/smoke_b16_ddp/checkpoints
+log_dir: /data/ynzhang/PixelResShift4/smoke_b16_ddp/logs
+seed: 42
+
+model:
+  model_str: pmfDiT_B_16
+  image_size: 256
+  in_channels: 3
+  cond_channels: 3
+  num_classes: 1
+  eval_mode: false
+
+data:
+  num_workers: 2
+  pin_memory: true
+  drop_last: true
+  train:
+    type: bicubic
+    params:
+      source_path: /home/lkshpc/pixel_resshift/ResShift/testdata/Bicubicx4/gt
+      source_txt_path: null
+      degrade_kwargs:
+        scale: 0.25
+        activate_matlab: true
+        resize_back: false
+        pch_size: 256
+        pass_smallmaxresize: false
+        pass_aug: false
+        pass_crop: false
+      transform_type: default
+      transform_kwargs:
+        mean: 0.5
+        std: 0.5
+      length: null
+      need_path: false
+      im_exts: [png, jpg, jpeg, JPEG]
+      recursive: false
+
+training:
+  batch_size: 2
+  micro_batch_size: 1
+  gradient_accumulation_steps: 1
+  num_epochs: 5
+  max_steps: 2
+  precision: fp32
+  optimizer: muon
+  learning_rate: 0.001
+  adam_b2: 0.95
+  weight_decay: 0.0
+  lr_schedule: warmup_const
+  warmup_epochs: 0
+  grad_clip_norm: 1.0
+  log_per_step: 1
+  save_per_step: 2

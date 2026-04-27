@@ -1,0 +1,76 @@
+output_dir: /data/ynzhang/PixelResShift4/train_h16_2000
+checkpoint_dir: /data/ynzhang/PixelResShift4/train_h16_2000/checkpoints
+log_dir: /data/ynzhang/PixelResShift4/train_h16_2000/logs
+image_dir: /data/ynzhang/PixelResShift4/train_h16_2000/images
+seed: 42
+
+model:
+  model_str: pmfDiT_H_16
+  image_size: 256
+  in_channels: 3
+  cond_channels: 3
+  num_classes: 1
+  eval_mode: false
+
+meanflow:
+  lpips: true
+  lpips_lambda: 0.4
+  perceptual_max_t: 0.8
+  endpoint_noise_std: 0.8927
+  condition_upsample_mode: bicubic
+
+data:
+  num_workers: 4
+  pin_memory: true
+  drop_last: true
+  train:
+    type: realesrgan
+    params:
+      dir_paths: [/data/ynzhang/imagenet_val_train_jpeg]
+      txt_file_path: []
+      im_exts: [JPEG]
+      gt_size: 256
+      use_hflip: false
+      use_rot: false
+      crop_pad_size: 300
+      rescale_gt: true
+      io_backend:
+        type: disk
+      blur_kernel_size: 21
+      kernel_list: [iso, aniso, generalized_iso, generalized_aniso, plateau_iso, plateau_aniso]
+      kernel_prob: [0.45, 0.25, 0.12, 0.03, 0.12, 0.03]
+      blur_sigma: [0.2, 3]
+      betag_range: [0.5, 4]
+      betap_range: [1, 2]
+      sinc_prob: 0.1
+      blur_kernel_size2: 15
+      kernel_list2: [iso, aniso, generalized_iso, generalized_aniso, plateau_iso, plateau_aniso]
+      kernel_prob2: [0.45, 0.25, 0.12, 0.03, 0.12, 0.03]
+      blur_sigma2: [0.2, 1.5]
+      betag_range2: [0.5, 4]
+      betap_range2: [1, 2]
+      sinc_prob2: 0.1
+      final_sinc_prob: 0.8
+      mean: [0.5, 0.5, 0.5]
+      std: [0.5, 0.5, 0.5]
+      out_size: 256
+      length: 50000
+
+training:
+  batch_size: 1
+  micro_batch_size: 1
+  gradient_accumulation_steps: 1
+  num_epochs: 1
+  max_steps: 2000
+  precision: fp32
+  optimizer: muon
+  learning_rate: 0.001
+  adam_b2: 0.95
+  weight_decay: 0.0
+  lr_schedule: warmup_const
+  warmup_epochs: 0
+  grad_clip_norm: 1.0
+  log_per_step: 20
+  log_avg_window: 100
+  save_image_per_step: 500
+  save_per_step: 500
