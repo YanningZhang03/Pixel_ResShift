@@ -1,0 +1,63 @@
+output_dir: outputs/smoke
+checkpoint_dir: outputs/smoke/checkpoints
+log_dir: outputs/smoke/logs
+image_dir: outputs/smoke/images
+seed: 42
+
+model:
+  model_str: pmfDiT_B_16
+  image_size: 256
+  cond_channels: 3
+  cross_scale_init: 0.01
+
+meanflow:
+  cfg_max: 1.0
+  endpoint_noise_std: 0.8927
+  lpips: false
+  convnext: false
+  pixel_l1_lambda: 0.0
+  lr_consistency_lambda: 0.0
+  use_label_condition: false
+
+data:
+  num_workers: 0
+  pin_memory: false
+  persistent_workers: false
+  drop_last: true
+  train:
+    type: bicubic
+    params:
+      source_path: data/smoke_images
+      source_txt_path: null
+      degrade_kwargs:
+        scale: 0.25
+        activate_matlab: true
+        resize_back: false
+        pch_size: 256
+        pass_smallmaxresize: false
+        pass_aug: false
+        pass_crop: false
+      transform_type: default
+      transform_kwargs:
+        mean: 0.5
+        std: 0.5
+      length: 8
+      need_path: true
+      im_exts: [png, jpg, jpeg, JPEG]
+      recursive: true
+  val: null
+
+training:
+  batch_size: 1
+  micro_batch_size: 1
+  gradient_accumulation_steps: 1
+  num_epochs: 1
+  max_steps: 2
+  optimizer: adamw
+  learning_rate: 1.0e-4
+  save_per_step: 0
+  save_epoch_end: false
+  save_image_per_step: 1
+  visual_num_samples: 1
+  pretrained_pmf_path: null
+

@@ -1,0 +1,72 @@
+output_dir: outputs/train_b16_lsdir
+checkpoint_dir: outputs/train_b16_lsdir/checkpoints
+log_dir: outputs/train_b16_lsdir/logs
+image_dir: outputs/train_b16_lsdir/images
+seed: 42
+
+model:
+  model_str: pmfDiT_B_16
+  image_size: 256
+  cond_channels: 3
+  cross_scale_init: 0.01
+
+meanflow:
+  P_mean: 0.8
+  P_std: 0.8
+  cfg_max: 1.0
+  data_proportion: 0.5
+  class_dropout_prob: 0.0
+  endpoint_noise_std: 0.8927
+  clip_endpoint: false
+  lpips: true
+  lpips_lambda: 0.4
+  convnext: true
+  convnext_lambda: 0.1
+  perceptual_max_t: 0.8
+  pixel_l1_lambda: 0.0
+  lr_consistency_lambda: 0.0
+  use_label_condition: false
+
+data:
+  num_workers: 8
+  prefetch_factor: 4
+  pin_memory: true
+  persistent_workers: true
+  drop_last: true
+  train:
+    type: lsdir
+    params:
+      root: data/LSDIR
+      gt_dir: LSDIR_GT
+      gt_size: 256
+      out_size: 256
+      use_hflip: false
+      use_rot: false
+      im_exts: [png, PNG]
+  val: null
+
+training:
+  batch_size: 64
+  micro_batch_size: 8
+  gradient_accumulation_steps: null
+  num_epochs: 80
+  max_steps: null
+  precision: fp32
+  allow_tf32: true
+  optimizer: muon
+  learning_rate: 1.0e-3
+  adam_b2: 0.95
+  weight_decay: 0.0
+  lr_schedule: warmup_const
+  warmup_epochs: 0
+  grad_clip_norm: 1.0
+  log_per_step: 20
+  log_avg_window: 100
+  save_image_per_step: 500
+  visual_num_samples: 4
+  save_per_step: 20000
+  save_epoch_end: true
+  resume_from: null
+  pretrained_pmf_path: null
+  pretrained_pmf_ema: 2000
+

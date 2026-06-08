@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pixel-resshift"
+version = "0.1.0"
+description = "Pixel-space MeanFlow super-resolution with ResShift-style degradation and LR image conditioning."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "torch",
+    "torchvision",
+    "numpy",
+    "Pillow",
+    "PyYAML",
+    "tqdm",
+    "einops",
+    "lpips",
+    "scikit-image",
+    "scipy",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pixel_resshift*"]
+

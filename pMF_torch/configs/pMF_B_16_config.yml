@@ -1,0 +1,62 @@
+dataset:
+    root: /root/data/imagenet_data
+    image_size: 256
+
+model:
+    model_str: pmfDiT_B_16
+    cfg_beta: 1.0
+
+    P_mean: 0.8
+    P_std: 0.8
+    noise_scale: 1.0
+
+    lpips: True
+    lpips_lambda: 0.4
+    convnext: True
+    convnext_lambda: 0.1
+    perceptual_max_t: 0.8
+
+training:
+    log_per_step: 100
+    checkpoint_per_epoch: 20
+
+    num_epochs: 320
+    batch_size: 16 # 1024
+    precision: bf16
+    learning_rate: 0.001 # for muon
+    warmup_epochs: 0
+    
+    adam_b2: 0.95
+    # multiple ema
+    ema_type: 'edm'
+    ema_val: [500, 1000, 2000]
+
+    sample_per_epoch: 5
+    fid_per_epoch: 10
+
+    seed: 42
+
+fid:
+    device_batch_size: 40
+    num_samples: 50000
+    
+    cache_ref: /root/.cache/huggingface/hub/models--Lyy0725--pMF/snapshots/1f9756b5312bee6b3a36c93e1ae5feaaea173030/imagenet_256_fid_stats.npz
+
+sampling:
+    # sample parameters evaluated during training
+    num_steps: 1
+    omega: 8.5
+    t_min: 0.1
+    t_max: 0.7
+
+logging:
+    use_wandb: True # set to True to use wandb
+    wandb_project: 'pMF' # change to your wandb project
+    wandb_entity: 'lu-h0502' # paste your wandb entity here
+    wandb_tags:
+        - 'pMF-B-16'
+    wandb_notes: 'pMF-B-16' # your wandb notes
+
+load_from: ''
+
+eval_only: False # set to True for evaluation only
